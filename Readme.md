@@ -23,3 +23,6 @@ envn({
   async: false
 });
 ```
+
+# License
+MIT
