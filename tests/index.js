@@ -4,7 +4,8 @@ envn({
   path: 'tests/fixtures/.env',
   async: false,
   override: false,
-  debug: true
+  debug: false
 });
 
-console.log(process.env.SENTENCE);
+console.log('-------------------------------');
+console.log(process.env.MISS_DOUBLE_QUOTE_END);

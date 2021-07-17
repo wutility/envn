@@ -12,13 +12,10 @@ module.exports = function (ops) {
 
   const skipColor = '\x1b[0m';
 
-  function setEnVars (content) {
+  function setVars (content) {
     function parseObj (obj) {
-      try {
-        return JSON.parse(obj)
-      } catch (error) {
-        return obj
-      }
+      try { return JSON.parse(obj) }
+      catch (e) { return obj }
     }
 
     const messages = [];
@@ -28,10 +25,13 @@ module.exports = function (ops) {
       const dmsgs = [
         `key or value is empty`,
         `key or value is not in valid format`,
-        `is already defined in process.env and will not be overwritten`
+        `key is already defined in process.env and will not be overwritten`
       ];
 
-      messages.push(`\x1b[3${msgNb < 2 ? 1 : 3}m`, `${lineNb} - "${line}" ${dmsgs[msgNb]}`, skipColor);
+      messages.push(
+        `\n\x1b[36m Line ${lineNb}${skipColor} - "${line}" ${skipColor}`,
+        `\t\x1b[3${msgNb < 2 ? 1 : 3}m ${dmsgs[msgNb]}${skipColor}`
+      );
     }
 
     for (let i = 0; i < lines.length; i++) {
@@ -46,26 +46,31 @@ module.exports = function (ops) {
           let key = line.slice(0, idxEq).trim(),
             value = line.slice(idxEq + 1).trim();
 
+          // validate and remove quotes
+          if (/^("|').*|.*("|')$/.test(value)) {            
+            let m = value.match(/(?:\"|\').*/)            
+            value = m && m[0] === value ? value.slice(1, -1) : null;   
+          }
+
+          // validate is object and parse it
+          if (value && (value.match(/^\{.*\}$/) || value === 'null')) {
+            value = parseObj(value);
+          }
+
           if (key && value) {
-            if (value.match(/^\{.*\}$/)) { // validate is object and parse it
-              value = parseObj(value);
-            }
-
-            // validate and remove quotes
-            //value =typeof value === 'string' && value.match(qr) ? value.replace(qr, "$1") : reject(lineNum, line, 1)
-
             if (!options.override && process.env[key]) {
-              reject(lineNum, key, 2);
+              reject(lineNum, line, 2);
             }
             else { process.env[key] = value; }
           }
-          else { reject(lineNum, key, 1) }
+          else { reject(lineNum, line, 1) }
         }
         else { reject(lineNum, line, 0) }
       }
     }
 
     if (options.debug) {
+      console.log(`\x1b[32m[Envn Debug]${skipColor}`);
       messages.forEach(msg => console.log(msg))
     }
   }
@@ -75,11 +80,11 @@ module.exports = function (ops) {
   if (options.async) {
     fs.readFile(envPathFile, options.encoding, (err, content) => {
       if (err) console.error('\x1b[31m', err, skipColor);
-      else setEnVars(content)
+      else setVars(content)
     });
   }
   else {
     const content = fs.readFileSync(envPathFile, options.encoding);
-    setEnVars(content)
+    setVars(content)
   }
 }
