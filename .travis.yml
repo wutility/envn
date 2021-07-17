@@ -1,0 +1,25 @@
+sudo: false
+
+language: node_js
+node_js:
+  - "10"
+  - "12"
+  - "14"
+
+os:
+- osx
+- linux
+- windows
+
+install:
+  - travis_retry npm install
+
+script:
+  - uname -a
+  - node --version
+  - npm --version
+  - if [ "$TRAVIS_OS_NAME" != "windows" ]; then npm run ci-lint; fi
+  - npm run test
+
+after_success:
+  - "cat coverage/lcov.info | ./node_modules/.bin/coveralls"
