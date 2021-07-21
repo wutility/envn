@@ -13,9 +13,12 @@ module.exports = function (ops) {
   const skipColor = '\x1b[0m';
 
   function setVars (content) {
-    function parseObj (obj) {
-      try { return JSON.parse(obj) }
-      catch (e) { return obj }
+
+    const parseObj = obj => {
+      try {
+        return JSON.parse(obj) ? obj : null
+      }
+      catch (e) { return null }
     }
 
     const messages = [];
@@ -47,9 +50,9 @@ module.exports = function (ops) {
             value = line.slice(idxEq + 1).trim();
 
           // validate and remove quotes
-          if (/^("|').*|.*("|')$/.test(value)) {            
-            let m = value.match(/(?:\"|\').*/)            
-            value = m && m[0] === value ? value.slice(1, -1) : null;   
+          if (/^("|').*|.*("|')$/.test(value)) {
+            let m = value.match(/(?:\"|\').*/)
+            value = m && m[0] === value ? value.slice(1, -1) : null;
           }
 
           // validate is object and parse it
@@ -59,13 +62,13 @@ module.exports = function (ops) {
 
           if (key && value) {
             if (!options.override && process.env[key]) {
-              reject(lineNum, line, 2);
+              options.debug && reject(lineNum, line, 2);
             }
             else { process.env[key] = value; }
           }
-          else { reject(lineNum, line, 1) }
+          else { options.debug && reject(lineNum, line, 1) }
         }
-        else { reject(lineNum, line, 0) }
+        else { options.debug && reject(lineNum, line, 0) }
       }
     }
 

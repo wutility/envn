@@ -1,12 +1,38 @@
 {
   "name": "envn",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Loads environment variables into process.env fast and easy",
+  "main": "build/index.js",
+  "module": "build/index.esm.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "rollup -w -c",    
+    "test": "jest tests",
+    "build": "rollup -c && npm run test"
   },
-  "keywords": ["env", "variables"],
+  "keywords": [
+    "env",
+    "environment",
+    "variables",
+    "config",
+    "settings"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wutility/envn.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wutility/envn/issues"
+  },
+  "homepage": "https://github.com/wutility/envn#readme",
   "author": "Haikel Fazzani",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.0.2",
+    "jest": "^27.0.6",
+    "rollup": "^2.53.3",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=10"
+  }
 }

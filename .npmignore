@@ -1,11 +1,17 @@
 *.swp
 .DS_Store
 .idea
+.vscode
 nohup.out
 npm-debug.log
-node_modules/
 
+node_modules/
 fixtures/
+tests/
 
 .env
 .travis.yml
+.gitignore
+
+index.js
+rollup.config.js
