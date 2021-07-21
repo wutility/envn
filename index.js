@@ -25,16 +25,18 @@ module.exports = function (ops) {
     const lines = content.split(/\r\n|\n|\r/g);
 
     const reject = (lineNb, line, msgNb) => {
-      const dmsgs = [
-        `key or value is empty`,
-        `key or value is not in valid format`,
-        `key is already defined in process.env and will not be overwritten`
-      ];
+      if (options.debug) {
+        const dmsgs = [
+          `key or value is empty`,
+          `key or value is not in valid format`,
+          `key is already defined in process.env and will not be overwritten`
+        ];
 
-      messages.push(
-        `\n\x1b[36m Line ${lineNb}${skipColor} - "${line}" ${skipColor}`,
-        `\t\x1b[3${msgNb < 2 ? 1 : 3}m ${dmsgs[msgNb]}${skipColor}`
-      );
+        messages.push(
+          `\n\x1b[36m Line ${lineNb}${skipColor} - "${line}" ${skipColor}`,
+          `\t\x1b[3${msgNb < 2 ? 1 : 3}m ${dmsgs[msgNb]}${skipColor}`
+        );
+      }
     }
 
     for (let i = 0; i < lines.length; i++) {
@@ -62,13 +64,13 @@ module.exports = function (ops) {
 
           if (key && value) {
             if (!options.override && process.env[key]) {
-              options.debug && reject(lineNum, line, 2);
+              reject(lineNum, line, 2);
             }
             else { process.env[key] = value; }
           }
-          else { options.debug && reject(lineNum, line, 1) }
+          else { reject(lineNum, line, 1) }
         }
-        else { options.debug && reject(lineNum, line, 0) }
+        else { reject(lineNum, line, 0) }
       }
     }
 

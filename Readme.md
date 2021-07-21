@@ -1,19 +1,19 @@
 # Envn
 Envn is a zero-dependency module that loads environment variables from a .env file into `process.env`.
 
-### Install
+# Install
 ```js
 $ npm install envn
 // or via Yarn
 $ yarn add envn
 ```
 
-### Usage
+# Usage
 ```js
 const envn = require('envn')
 ```
 
-### Methods && Examples
+# Methods && Examples
 ```js
 envn({
   path: './fixtures/.env',

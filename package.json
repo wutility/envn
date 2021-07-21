@@ -6,8 +6,8 @@
   "module": "build/index.esm.js",
   "scripts": {
     "watch": "rollup -w -c",    
-    "test": "jest tests",
-    "build": "rollup -c && npm run test"
+    "build": "rollup -c",
+    "test": "npm run build && jest tests"    
   },
   "keywords": [
     "env",
