@@ -19,7 +19,7 @@ const envn = require('envn')
 # Methods && Examples
 ```js
 envn({
-  path: './fixtures/.env', // default: process.cwd()/.env
+  path: 'fixtures/.env', // default: process.cwd()/.env
   encoding: 'utf8',  
   override: false,    // Override the existance env variable
   async: false,      // Load env variables asynchronous

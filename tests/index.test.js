@@ -1,10 +1,7 @@
 const envn = require('../build/index')
 
 envn({
-  path: 'tests/fixtures/.env',
-  async: false,
-  override: false,
-  debug: false
+  path: 'tests/fixtures/.env'
 });
 
 test('Not Accepted: MISS_DOUBLE_QUOTE_END=bar" ', () => {
@@ -34,4 +31,14 @@ test('Accepted: SECRET_KEY=sdsdrtQUioPsd==', () => {
 test('Accepted: OB_UI={ "name": "hello", "age": 1 }', () => {
   const parsed = JSON.parse(process.env.OB_UI);
   expect(parsed).toEqual({ "name": "hello", "age": 1 });
+});
+
+// Loading another file
+
+envn({
+  path: 'tests/fixtures/.env.local'
+});
+
+test('Accepted: SENTENCE=\'Hi, there!\'', () => {
+  expect(process.env.SENTENCE).toBe("Hi, there!");
 });

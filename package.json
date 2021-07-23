@@ -1,13 +1,13 @@
 {
   "name": "envn",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Loads environment variables into process.env fast and easy",
   "main": "build/index.js",
   "module": "build/index.esm.js",
   "scripts": {
-    "watch": "rollup -w -c",    
+    "watch": "rollup -w -c",
     "build": "rollup -c",
-    "test": "npm run build && jest tests"    
+    "test": "npm run build && jest tests"
   },
   "keywords": [
     "env",
@@ -27,6 +27,7 @@
   "author": "Haikel Fazzani",
   "license": "MIT",
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^19.0.1",
     "@rollup/plugin-node-resolve": "^13.0.2",
     "jest": "^27.0.6",
     "rollup": "^2.53.3",

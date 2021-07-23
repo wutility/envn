@@ -1,7 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 
-module.exports = function (ops) {
+module.exports = function (ops = {}) {
   const options = {
     path: [process.cwd(), ops.path || '.env'],
     encoding: ops.encoding || 'utf8',
