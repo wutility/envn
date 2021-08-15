@@ -13,5 +13,6 @@ tests/
 .travis.yml
 .gitignore
 
+testr.js
 index.js
 rollup.config.js

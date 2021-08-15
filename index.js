@@ -12,9 +12,24 @@ module.exports = function (ops = {}) {
 
   const skipColor = '\x1b[0m';
 
+  const reject = (lineNb, line, msgNb) => {
+    if (options.debug) {
+      const dmsgs = [
+        `key or value is empty`,
+        `key or value is not in valid format`,
+        `key is already defined in process.env and will not be overwritten`
+      ];
+
+      messages.push(
+        `\n\x1b[36m Line ${lineNb}${skipColor} - "${line}" ${skipColor}`,
+        `\t\x1b[3${msgNb < 2 ? 1 : 3}m ${dmsgs[msgNb]}${skipColor}`
+      );
+    }
+  }
+
   function setVars (content) {
 
-    const parseObj = obj => {
+    const parseObj = (obj) => {
       try {
         return JSON.parse(obj) ? obj : null
       }
@@ -23,21 +38,6 @@ module.exports = function (ops = {}) {
 
     const messages = [];
     const lines = content.split(/\r\n|\n|\r/g);
-
-    const reject = (lineNb, line, msgNb) => {
-      if (options.debug) {
-        const dmsgs = [
-          `key or value is empty`,
-          `key or value is not in valid format`,
-          `key is already defined in process.env and will not be overwritten`
-        ];
-
-        messages.push(
-          `\n\x1b[36m Line ${lineNb}${skipColor} - "${line}" ${skipColor}`,
-          `\t\x1b[3${msgNb < 2 ? 1 : 3}m ${dmsgs[msgNb]}${skipColor}`
-        );
-      }
-    }
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i],
@@ -57,8 +57,8 @@ module.exports = function (ops = {}) {
             value = m && m[0] === value ? value.slice(1, -1) : null;
           }
 
-          // validate is object and parse it
-          if (value && (value.match(/^\{.*\}$/) || value === 'null')) {
+          // accept: object / array / null
+          if (value && (value.match(/^(\{|\[).*(\}|\])$/) || value === 'null')) {
             value = parseObj(value);
           }
 
@@ -89,7 +89,12 @@ module.exports = function (ops = {}) {
     });
   }
   else {
-    const content = fs.readFileSync(envPathFile, options.encoding);
-    setVars(content)
+    if (fs.existsSync(envPathFile)) {
+      const content = fs.readFileSync(envPathFile, options.encoding);
+      setVars(content)
+    }
+    else {
+      console.log('No .env file exists ' + envPathFile);
+    }
   }
 }

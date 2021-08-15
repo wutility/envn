@@ -16,10 +16,6 @@ test('Not Accepted: NULL_VALUE=null ', () => {
   expect(process.env.NULL_VALUE).toBeUndefined();
 });
 
-test('Not Accepted: NULL_VALUE=null ', () => {
-  expect(process.env.NULL_VALUE).toBeUndefined();
-});
-
 test('Not Accepted: &po = io ', () => {
   expect(process.env['&po']).toBeUndefined();
 });
@@ -33,8 +29,12 @@ test('Accepted: OB_UI={ "name": "hello", "age": 1 }', () => {
   expect(parsed).toEqual({ "name": "hello", "age": 1 });
 });
 
-// Loading another file
+test('Accepted: VALID_DOMAINS=[url1, url2]', () => {
+  const parsed = JSON.parse(process.env.VALID_DOMAINS);  
+  expect(parsed).toEqual(['https://twitter.com', 'https://google.com']);
+});
 
+// Loading another file
 envn({
   path: 'tests/fixtures/.env.local'
 });

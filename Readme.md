@@ -27,5 +27,8 @@ envn({
 });
 ```
 
+### Notes
+- Arrays `[..., "..."]`, objects `{...:"", ...: 1}` and `null` are accepted.
+
 # License
 MIT
